@@ -1,109 +1,84 @@
-# Python Template
+# Fastapi Template
 
-## Project Structure
+A basic template to help kickstart development of a Fastapi based API. ideal for ideating and POCs, ready to grow with you. This template is completely front-end independent
+and leaves all related decisions up to the developer.
 
-- It uses `project.toml` instead of `setup.py` and `setup.cfg`. The reasoning is following:
-- As [official setuptools guide](https://github.com/pypa/setuptools/blob/main/docs/userguide/quickstart.rst) says, " configuring new projects via setup.py is discouraged"
-- One of the biggest problems with setuptools is that the use of an executable file (i.e. the setup.py) cannot be executed without knowing its dependencies. And there is really no way to know what these dependencies are unless you actually execute the file that contains the information related to package dependencies.
-- The pyproject.toml file is supposed to solve the build-tool dependency chicken and egg problem since pip itself can read pyproject.yoml along with the version of setuptools or wheel the project requires.
-- The pyproject.toml file was introduced in PEP-518 (2016) as a way of separating configuration of the build system from a specific, optional library (setuptools) and also enabling setuptools to install itself without already being installed. Subsequently PEP-621 (2020) introduces the idea that the pyproject.toml file be used for wider project configuration and PEP-660 (2021) proposes finally doing away with the need for setup.py for editable installation using pip.
-- It uses [rye](https://github.com/mitsuhiko/rye) for python dependency operations
-- It uses `src` layout, which is the recommended layout for python projects to avoid common [pitfalls](https://blog.ionelmc.ro/2014/05/25/python-packaging/#the-structure).
+## Features
 
-## Install
+* Minimal Fastapi app
+* Async/Await Functionality
+* JWT based OAuth security on a per endpoint basis
+* Unit tests
+* Type hints
+* Basic Database Functionality Included (SQLite3)
+* Support for .env
 
-### Default installation
+### Application Structure
 
-- Install rye - System wide
+The API is divided in three parts `users`, `posts` and `auth`.
+
+The `users` part is responsible for all the routes associated with user management.
+
+The `posts` part is responsible for handeling all requests related to adding, retrieving and deleting posts.
+
+The `auth` part is responsible for handeling user registration and login. The login is Oauth2 based and uses JWTs.
+
+## Installation
+
+### Template and Dependencies
+
+* Clone this repository:
+
+ ```zsh
+ git clone https://github.com/StefanVDWeide/fastapi-api-template.git
+ ```
+
+### Virtual Environment Setup
+
+It is preferred to create a virtual environment per project, rather then installing all dependencies of each of your
+projects system wide. Once you install [virtual env](https://virtualenv.pypa.io/en/stable/installation/), and move to
+your projects directory through your terminal, you can set up a virtual env with:
 
 ```bash
-make -s install-rye
-
+python3 -m venv .venv
 ```
 
-- Install the project dependencies
+### Dependency installations
+
+To install the necessary packages:
 
 ```bash
-make -s install
+source venv/bin/activate
+pip3 install -r requirements.txt
 ```
 
-- After running above command, the project installed in editable mode with all development and test dependencies installed.
-- Moreover, a dummy `entry point` called `placeholder` will be available as a cli command.
+This will install the required packages within your venv.
 
-### Docker
+---
 
-```bash
-# Development build (800 MB)
-docker build --tag python-template --file docker/Dockerfile --target development .
+### Setting up a SQLite3 Database
 
-# Production build (145 MB)
-docker build --tag python-template --file docker/Dockerfile --target production .
+Database migrations are handled through Alembic. Migrations are for creating and uprading necessary tables in your database. The files generate by the migrations should be added to source control.
+
+To setup a SQLite3 database for development (SQLite3 is usually **not** recommended for production unless you know what you are doing, use something like PostgreSQL or MySQL) navigate to the root folder and complete the following steps:
+
+First, we need to initialize the database. Make sure you have a `.env` file in the root of the project with the following content:
+
+```env
+DATABASE_URL = sqlite+aiosqlite:///sql_app.db
+DATABASE_TEST_URL = sqlite+aiosqlite:///test.db
+JWT_SECRET_KEY = secret
+JWT_REFRESH_SECRET_KEY = secret
 ```
 
-- To run command inside the container:
+Now that the app knows we want to use a SQLite database, run the following command to create it:
 
-```bash
-docker run -it python-template:latest bash
-
-# Temporary container
-docker run --rm -it python-template:latest bash
+```zsh
+alembic upgrade head
 ```
 
-## IDE Setings
+Finaly, run the API itself with the following command:
 
-### Pycharm
-
-- Line-length: `Editor -> Code Style -> Hard wrap at 88`
-
-#### Inspections
-
-Settings -> Editor -> Inspections -> Python
-
-Enable all except:
-
-- Accessing a protected member of a class or a module
-- Assignment can be replaced with augmented assignments
-- Classic style class usage
-- Incorrect BDD Behave-specific definitions
-- No encoding specified for file
-- The function argument is equal to the default parameter
-- Type checker compatible with Pydantic
-- For "PEP 8 coding style violation":
-  Ignore = E266, E501
-- For "PEP 8 naming convetion violation":
-  Ignore = N803
-
-#### Plugins
-
-- Ruff
-- Pydantic
-
-### Vscode
-
-- All recommended settings and extensions can be found in `.vscode` directory.
-
-## Useful Makefile commands
-
-```bash
-# All available commands
-makefile
-makefile help
-
-# Run all tests
-make -s test
-
-# Run specific tests
-make -s test-one TEST_MARKER=<TEST_MARKER>
-
-# Remove unnecessary files such as build,test, cache
-make -s clean
-
-# Run all pre-commit hooks
-make -s pre-commit
-
-# Lint the project
-make -s lint
-
-# Profile a file
-make -s profile PROFILE_FILE_PATH=<PATH_TO_FILE>
+```zsh
+uvicorn app.main:app --reload
 ```

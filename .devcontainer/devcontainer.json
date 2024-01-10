@@ -1,5 +1,5 @@
 {
-  "name": "python_template",
+  "name": "stable_diffusion_backend",
   "dockerComposeFile": [
     "../docker-compose.yml",
     "docker-compose.yml"

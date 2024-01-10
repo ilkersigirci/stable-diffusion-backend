@@ -1,16 +1,16 @@
 [project]
-name = "python_template"
-version = "0.0.0"
-description = "Python Template"
+name = "stable_diffusion_backend"
+version = "0.1.0"
+description = "Stable Diffusion Backend"
 
 # NOTE: Overwrites .python-version
 # requires-python = ">=3.11,<3.13"
 
 authors = [
-    {name = "template", email = "template@github.com"},
+    { name = "İlker SIĞIRCI", email = "sigirci.ilker@gmail.com" }
 ]
 maintainers = [
-    {name = "template", email = "template@github.com"},
+    { name = "İlker SIĞIRCI", email = "sigirci.ilker@gmail.com" }
 ]
 readme = "README.md"
 
@@ -33,7 +33,21 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 
-dependencies = []
+dependencies = [
+    "fastapi[all]>=0.108.0",
+    "pydantic>=2.0.0",
+    "sqlalchemy>=2.0.0",
+    "alembic",
+    "aiosqlite",
+    "python-jose[cryptography]",
+    "passlib[bcrypt]",
+    # "httpx",
+    "diffusers>=0.25.0",
+    "torch>=2.1.2",
+    "transformers",
+    "accelerate",
+    "omegaconf",
+]
 
 [tool.rye]
 managed = true
@@ -42,6 +56,7 @@ dev-dependencies = [
     "ruff==0.1.11",
     "mypy",
     "scalene~=1.5.21.2",
+    "ipykernel",
     ## DOCS
     "mkdocs",
     "mkdocs-material",
@@ -53,15 +68,13 @@ dev-dependencies = [
     "pytest-cov",
     "pytest-rerunfailures",
     "pytest-xdist",
+    "pytest-asyncio",
     # "pytest-timeout",
 ]
 
 [[tool.rye.sources]]
 name = "default"
 url = "https://pypi.org/simple/"
-
-[tool.rye.scripts]
-placeholder = "python_template.scripts.placeholder:placeholder_script"
 
 [tool.pytest.ini_options]
 minversion = "7.0.0"
@@ -73,7 +86,7 @@ addopts = [
 #    "--strict-markers",
 #    "--doctest-modules",
     # NOTE: cov is not working with pycharm debugger. Enable it later!
-#    "--cov python_template",
+#    "--cov stable_diffusion_backend",
 #    "--cov-report=xml",
 #    "--cov-report html",
 ]
@@ -95,7 +108,7 @@ select = [
     "B",  # flake8-bugbear
     "C",  # flake8-comprehensions
     "C9",  # mccabe
-    "D",  # flake8-docstrings
+    # "D",  # flake8-docstrings
     "E",  # pycodestyle errors (default)
     "F",  # pyflakes (default)
     "I",  # isort
@@ -132,7 +145,7 @@ extend-exclude = [
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["E402", "F401"]
 # "path/to/file.py" = ["E402"]
-# 'python_template/__init__.py' = ['F405', 'F403']
+# 'stable_diffusion_backend/__init__.py' = ['F405', 'F403']
 
 # [tool.ruff.flake8-quotes]
 # inline-quotes = "single"
@@ -163,7 +176,7 @@ combine-as-imports = true
 # Read more here: https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
 [tool.mypy]
 # python_version = "3.8"
-files = ["src/python_template"]
+files = ["src"]
 # exclude = ['^tests/']
 strict = true
 show_error_codes = true
@@ -176,7 +189,7 @@ ignore_missing_imports = true
 check_untyped_defs = true
 
 [tool.coverage.run]
-source = ['src/python_template']
+source = ['src']
 branch = true
 context = '${CONTEXT}'
 
@@ -192,11 +205,14 @@ exclude_lines = [
 
 # [tool.coverage.paths]
 # source = [
-#     'src/python_template/',
+#     'src/stable_diffusion_backend/',
 # ]
 
 [tool.hatch.metadata]
 allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stable_diffusion_backend"]
 
 [build-system]
 requires = ["hatchling"]

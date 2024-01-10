@@ -1,8 +1,8 @@
 site_name: Python Template
 site_dir: public
-site_url: https://github.com/ilkersigirci/python-template
-# repo_url: https://gitlab.com/ilkersigirci/python-template # # For GitLab
-repo_url: https://ilkersigirci.github.io/python-template/ # For GitHub
+site_url: https://github.com/ilkersigirci/stable-diffusion-backend
+# repo_url: https://gitlab.com/ilkersigirci/stable-diffusion-backend # # For GitLab
+repo_url: https://ilkersigirci.github.io/stable-diffusion-backend/ # For GitHub
 # repo_name: GitLab
 repo_name: GitHub
 

@@ -2,17 +2,16 @@
 # chain commands together with semicolon
 .ONESHELL:
 SHELL=/bin/bash
-ROOT_DIR=python-template
-PACKAGE=src/python_template
+PACKAGE=src
 PYTHON = python
 PYTHON_VERSION=3.11
 DOC_DIR=./docs
 TEST_DIR=./tests
 TEST_MARKER=placeholder
 TEST_OUTPUT_DIR=tests_outputs
-PRECOMMIT_FILE_PATHS=./python_template/__init__.py
-PROFILE_FILE_PATH=./python_template/__init__.py
-DOCKER_IMAGE=python-template
+PRECOMMIT_FILE_PATHS=./stable_diffusion_backend/__init__.py
+PROFILE_FILE_PATH=./stable_diffusion_backend/__init__.py
+DOCKER_IMAGE=stable-diffusion-backend
 DOCKER_TARGET=development
 
 # TODO: add source for rye
@@ -48,7 +47,7 @@ install-base: ## Installs only package dependencies
 install: ## Installs the development version of the package
 	$(MAKE) install-rye
 	rye sync --no-lock
-	$(MAKE) install-precommit
+	# $(MAKE) install-precommit
 
 # # FIXME: Currently not supported by rye
 # install-no-cache: ## Installs the development version of the package

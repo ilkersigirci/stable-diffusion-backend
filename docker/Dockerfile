@@ -1,5 +1,5 @@
 ARG PYTHON_BASE_IMAGE=3.11-slim-bookworm
-ARG APP_NAME=python_template
+ARG APP_NAME=stable_diffusion_backend
 
 #
 # Stage: staging

@@ -267,6 +267,10 @@ cython_debug/
 
 /.ruff_cache/
 public
+settings.json
+sql_app.db
+test.db
+images
 
 # Scalene related
 profile.*
