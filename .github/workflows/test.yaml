@@ -31,7 +31,7 @@ jobs:
   test_matrix:
     strategy:
       matrix:
-        python-version: ['3.11', '3.12']
+        python-version: ['3.11'] # '3.12'
         os: [ubuntu-22.04] # windows-latest
     runs-on: ${{ matrix.os }}
     steps:

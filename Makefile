@@ -47,7 +47,7 @@ install-base: ## Installs only package dependencies
 install: ## Installs the development version of the package
 	$(MAKE) install-rye
 	rye sync --no-lock
-	# $(MAKE) install-precommit
+	$(MAKE) install-precommit
 
 # # FIXME: Currently not supported by rye
 # install-no-cache: ## Installs the development version of the package
