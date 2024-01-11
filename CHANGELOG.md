@@ -1,10 +1,10 @@
 # Changelog
 
-## 1.0.0 - 2023-02-15
+## 1.0.0 - 2024-01-12
 
 ### Added
 
--   Initial release
+- Initial commit
 
 ### Changed
 

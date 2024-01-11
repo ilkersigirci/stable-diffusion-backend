@@ -15,7 +15,9 @@ maintainers = [
 readme = "README.md"
 
 keywords = [
-    "template"
+    "backend",
+    "fastapi",
+    "stable_diffusion",
 ]
 
 classifiers = [
@@ -41,7 +43,7 @@ dependencies = [
     "aiosqlite",
     "python-jose[cryptography]",
     "passlib[bcrypt]",
-    # "httpx",
+    "bcrypt==4.0.1", # NOTE: See https://github.com/pyca/bcrypt/issues/684
     "diffusers>=0.25.0",
     "torch>=2.1.2",
     "transformers",

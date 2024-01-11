@@ -80,5 +80,5 @@ alembic upgrade head
 Finaly, run the API itself with the following command:
 
 ```zsh
-uvicorn app.main:app --reload
+python src/stable_diffusion_backend/__main__.py
 ```

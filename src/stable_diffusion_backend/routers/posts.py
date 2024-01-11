@@ -52,7 +52,7 @@ async def add_user(
     post: posts_schema.PostsCreate,
     db: CurrentAsyncSession,
 ) -> str:
-    posts_db = Posts(**post.dict())
+    posts_db = Posts(**post.model_dump())
     db.add(posts_db)
     await db.commit()
     return "ok"

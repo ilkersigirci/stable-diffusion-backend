@@ -271,6 +271,7 @@ settings.json
 sql_app.db
 test.db
 images
+*.safetensors
 
 # Scalene related
 profile.*

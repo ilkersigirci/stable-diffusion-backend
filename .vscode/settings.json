@@ -28,4 +28,7 @@
     "source.organizeImports.ruff": "explicit",
   },
   "evenBetterToml.formatter.reorderKeys": true,
+  "workbench.editorAssociations": {
+    "*.db": "sqlite-viewer.option",
+  }
 }
