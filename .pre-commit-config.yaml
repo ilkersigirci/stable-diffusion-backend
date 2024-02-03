@@ -25,7 +25,7 @@ repos:
         args: ["--remove"]
         description: Removes the encoding-pragma since python3 codes are utf-8 by default
       - id: check-added-large-files
-        args: ["--maxkb=1000"]
+        args: ["--maxkb=5000"]
 
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.9.0
@@ -36,7 +36,7 @@ repos:
       - id: python-use-type-annotations
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.11
+    rev: v0.2.0
     hooks:
       # Run the Ruff linter.
       - id: ruff
