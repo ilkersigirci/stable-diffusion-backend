@@ -11,16 +11,22 @@ from diffusers import (
     DPMSolverSinglestepScheduler,  # type: ignore
     StableDiffusionXLPipeline,  # type: ignore
 )
-
-# from PIL import Image as PILImage
 from PIL.Image import Image
+
+from stable_diffusion_backend.utils.general import check_env_vars
+
+check_env_vars()
+
+MODELS_ROOT_PATH = os.environ["MODELS_ROOT_PATH"]
 
 logger = logging.getLogger(__name__)
 
 
 @lru_cache(maxsize=None)
 def initialize_model(
-    scheduler: str | None = None, allow_nsfw: bool = True
+    model_name: str = "dreamshaperXL_turbo_v2DpmppSDE.safetensors",
+    scheduler: str | None = None,
+    allow_nsfw: bool = True,
 ) -> DiffusionPipeline:
     """
     Initialize the model for inference.
@@ -36,15 +42,11 @@ def initialize_model(
     - What is the best wat to cache the model? lru_cache or global parameter?
 
     """
-    MODELS_ROOT_PATH = os.environ.get("MODELS_ROOT_PATH")
 
-    if MODELS_ROOT_PATH is None:
-        raise ValueError("MODELS_ROOT_PATH is not set")
-
-    model_path = Path(MODELS_ROOT_PATH) / "dreamshaperXL_turboDpmppSDE.safetensors"
+    model_path = Path(MODELS_ROOT_PATH) / model_name
     image_size = 1024
 
-    pipe = StableDiffusionXLPipeline.from_single_file(
+    model = StableDiffusionXLPipeline.from_single_file(
         pretrained_model_link_or_path=str(model_path.resolve()),
         image_size=image_size,
         torch_dtype=torch.bfloat16,
@@ -53,15 +55,15 @@ def initialize_model(
         # local_files_only=True,
     )
 
-    # if allow_nsfw is True:
-    #     pipe.safety_checker = None
+    if allow_nsfw is True:
+        model.safety_checker = None
 
     # Default scheduler: EulerDiscreteScheduler
 
     # NOTE: Under dev, Related PR: https://github.com/huggingface/diffusers/pull/6477/files
     if scheduler == "DPM++ SDE Karras":
-        pipe.scheduler = DPMSolverSinglestepScheduler.from_config(
-            config=pipe.scheduler.config,
+        model.scheduler = DPMSolverSinglestepScheduler.from_config(
+            config=model.scheduler.config,
             use_karras_sigmas=True,
             algorithm_type="dpmsolver++",
             lower_order_final=True,
@@ -69,14 +71,14 @@ def initialize_model(
             final_sigmas_type="zero",
         )
     elif scheduler == "DPM++ 2M Karras":
-        pipe.scheduler = DPMSolverMultistepScheduler.from_config(
-            pipe.scheduler.config, use_karras_sigmas=True
+        model.scheduler = DPMSolverMultistepScheduler.from_config(
+            model.scheduler.config, use_karras_sigmas=True
         )
 
-    # pipe.to("cuda")
-    pipe.enable_model_cpu_offload()
+    # model.to("cuda")
+    model.enable_model_cpu_offload()
 
-    return pipe
+    return model
 
 
 def callback_dynamic_cfg(pipe, step_index, timestep, callback_kwargs):
@@ -167,6 +169,7 @@ def callback_image_progress(pipe, step_index, timestep, callback_kwargs):
 
 
 def text_to_img(  # noqa: PLR0913
+    model: DiffusionPipeline,
     prompt: str,
     negative_prompt: str | None = None,
     seed: int | None = None,
@@ -177,14 +180,11 @@ def text_to_img(  # noqa: PLR0913
 ) -> Image:
     generator = None if seed is None else torch.Generator("cuda").manual_seed(seed)
 
-    # pipe = initialize_model(scheduler=None)
-    # pipe = initialize_model(scheduler="DPM++ SDE Karras")
-
-    logger.info(f"Using device: {pipe.device}, with seed: {seed}")
+    logger.info(f"Using device: {model.device}, with seed: {seed}")
 
     start_time = time.time()
 
-    image: Image = pipe(
+    image: Image = model(
         prompt=prompt,
         negative_prompt=negative_prompt,
         guidance_scale=cfg_scale,  # (CFG: Classifier-Free Diffusion Guidance)
@@ -209,6 +209,7 @@ def text_to_img(  # noqa: PLR0913
 
 
 def img_to_img(  # noqa: PLR0913
+    model: DiffusionPipeline,
     prompt: str,
     negative_prompt: str | None = None,
     seed: int | None = None,
@@ -217,14 +218,5 @@ def img_to_img(  # noqa: PLR0913
     clip_skip: int | None = None,
     image_size: int = 1024,
 ):
-    logger.info(f"Using device: {pipe.device}, with seed: {seed}")
+    logger.info(f"Using device: {model.device}, with seed: {seed}")
     # start_time = time.time()
-
-
-#############################################################################
-
-# scheduler = None
-scheduler = "DPM++ SDE Karras"
-# scheduler = "DPM++ 2M Karras"
-
-pipe = initialize_model(scheduler=scheduler)

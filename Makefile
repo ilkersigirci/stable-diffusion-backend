@@ -189,3 +189,6 @@ profile-builtin: ## Profile the file with cProfile and shows the report in the t
 
 docker-build: ## Build docker image
 	docker build --tag ${DOCKER_IMAGE} --file docker/Dockerfile --target ${DOCKER_TARGET} .
+
+streamlit-gui:
+	streamlit run src/stable_diffusion_backend/gui/index.py

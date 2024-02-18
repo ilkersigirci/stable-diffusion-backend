@@ -13,7 +13,7 @@ from stable_diffusion_backend.db.schemas import (
     auth as auth_schemas,
     users as user_schemas,
 )
-from stable_diffusion_backend.utils import (
+from stable_diffusion_backend.utils.api import (
     create_access_token,
     create_refresh_token,
     get_password_hash,
