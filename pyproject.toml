@@ -46,8 +46,9 @@ dependencies = [
     "bcrypt==4.0.1",
     # NOTE: See https://github.com/pyca/bcrypt/issues/684
     "omegaconf",
-    "diffusers[torch]>=0.26.1",
+    "diffusers[torch]>=0.26.3",
     "transformers>=4.37.2",
+    "streamlit>=1.31.1",
 ]
 
 [tool.rye]

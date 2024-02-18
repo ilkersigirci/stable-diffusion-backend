@@ -64,6 +64,7 @@ def initialize_model(
             config=pipe.scheduler.config,
             use_karras_sigmas=True,
             algorithm_type="dpmsolver++",
+            lower_order_final=True,
             solver_order=2,
             final_sigmas_type="zero",
         )
